@@ -22,7 +22,7 @@ public class MainActivity extends AppCompatActivity {
 
     int pointAx = 0;
     int pointAy = 0;
-    int pointBx = 5000;
+    int pointBx = 500;
     int pointBy = 20000;
     int pointCx = 10000;
     int pointCy = 10000;
@@ -53,9 +53,9 @@ public class MainActivity extends AppCompatActivity {
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     private void sort() {
-          Comparator<MyPoint> byPointx = Comparator.comparing(MyPoint::getPointXcoordinate);
-     Collections.sort(myPointArrayList, byPointx);
-      //  Collections.sort(arrayListPointsX);
+        Comparator<MyPoint> byPointx = Comparator.comparing(MyPoint::getPointXcoordinate);
+        Collections.sort(myPointArrayList, byPointx);
+        //  Collections.sort(arrayListPointsX);
     }
 
 
@@ -67,15 +67,31 @@ public class MainActivity extends AppCompatActivity {
         GraphView graph = (GraphView) findViewById(R.id.graph);
         series = new PointsGraphSeries<DataPoint>();
         for (int i = 0; i < arrayListPointsX.size(); i++) {
-          //  x = arrayListPointsX.get(i);      y = arrayListPointsY.get(i);
-    //  x=  myPoint.getPointXcoordinate();  y=myPoint.getPointYcoordinate();
-      x = myPointArrayList.get(i).getPointXcoordinate()-1;
-          y = myPointArrayList.get(i).getPointYcoordinate()-1;
+            //  x = arrayListPointsX.get(i);      y = arrayListPointsY.get(i);
+            //  x=  myPoint.getPointXcoordinate();  y=myPoint.getPointYcoordinate();
+            x = myPointArrayList.get(i).getPointXcoordinate() - 1;
+            y = myPointArrayList.get(i).getPointYcoordinate() - 1;
             series.appendData(new DataPoint(x, y), true, 999999999);
         }
         graph.addSeries(series);
-        // graph.getLegendRenderer().setWidth(40000);
+        graph.getLegendRenderer().setWidth(40000);
+        //
+        graph.getViewport().setXAxisBoundsManual(true);
+        graph.getViewport().setMinX(0);
+        graph.getViewport().setMaxX(getMaxPoints(pointAx,pointBx,pointCx));
+        graph.getViewport().setYAxisBoundsManual(true);
+        graph.getViewport().setMinY(0);
+        graph.getViewport().setMaxY(getMaxPoints(pointAy,pointBy,pointCy));
 
+    }
+
+    private int getMaxPoints(int pointA, int pointB, int pointC) {
+        ArrayList<Integer> myLocalArrayList = new ArrayList<>();
+        myLocalArrayList.add(pointA);
+        myLocalArrayList.add(pointB);
+        myLocalArrayList.add(pointC);
+
+        return Collections.max(myLocalArrayList);
     }
 
     private void initBL() {
@@ -112,7 +128,7 @@ public class MainActivity extends AppCompatActivity {
     private void createPointsForFractal() {
         arrayListPointsX.add(pointStartX);
         arrayListPointsY.add(pointStartY);
-        myPointArrayList.add(new MyPoint(0,pointStartX,pointStartY));
+        myPointArrayList.add(new MyPoint(0, pointStartX, pointStartY));
         for (int i = 0; i < 5000; i++) {
             int localRandom = getRandomNumberInRange(1, 3);
             int localResX = (arrayListPointsX.get(i) + getFinalPointX(localRandom)) / 2;
@@ -120,7 +136,7 @@ public class MainActivity extends AppCompatActivity {
             arrayListPointsX.add(localResX);
             arrayListPointsY.add(localResY);
 
-            myPointArrayList.add(new MyPoint(i+1, localResX, localResY));
+            myPointArrayList.add(new MyPoint(i + 1, localResX, localResY));
         }
      /*   arrayListPointsX.add(pointAx);
         arrayListPointsX.add(pointBx);
