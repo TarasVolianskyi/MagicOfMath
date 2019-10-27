@@ -16,4 +16,13 @@
         android:layout_height="400dip"
         android:id="@+id/graph" />
 
+    <SeekBar
+        android:id="@+id/seekBar"
+        style="@style/Widget.AppCompat.SeekBar.Discrete"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:max="50000"
+        android:padding="30dp"
+        android:progress="3000" />
+
 </LinearLayout>
