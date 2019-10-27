@@ -6,6 +6,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.graphics.PorterDuff;
 import android.os.Build;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
 import android.widget.SeekBar;
 import android.widget.Toast;
 
@@ -20,7 +22,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Random;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
     int pointAx = 0;
     int pointAy = 0;
@@ -33,19 +35,21 @@ public class MainActivity extends AppCompatActivity {
     int finalPointX;
     int finalPointY;
 
-    double a = 0.0;
-    double b = 0.0;
-    double c = 0.0;
-    double d = 0.0;
-    double e = 0.0;
-    double f = 0.0;
-    double p = 0.0;
+    double a = 10.0;
+    double b = 20.0;
+    double c = 30.0;
+    double d = 40.0;
+    double e = 50.0;
+    double f = 60.0;
+    double p = 70.0;
+    double pointStartXpaporot = 0.0;
+    double pointStartYpaporot = 0.0;
 
 
     // int mainSize = 200;
     private SeekBar seekBar;
     private SeekBar seekBarPaporot;
-
+    private int numberOfPointsForPaporot = 50;
 
     private ArrayList<Integer> arrayListPointsX = new ArrayList<>();
     private ArrayList<Integer> arrayListPointsY = new ArrayList<>();
@@ -65,6 +69,9 @@ public class MainActivity extends AppCompatActivity {
     private ArrayList<Double> arrayListPointsXpaporot = new ArrayList<>();
     private ArrayList<Double> arrayListPointsYpaporot = new ArrayList<>();
 
+    private Button btnFractal;
+    private Button btnPaporot;
+
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
@@ -72,12 +79,18 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         initSeekBarView();
+        initSeekBarViewPaporot();
         initBL();
         initView();
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     private void initView() {
+        btnFractal = findViewById(R.id.btn1);
+        btnPaporot = findViewById(R.id.btn2);
+        btnFractal.setOnClickListener(this);
+        btnPaporot.setOnClickListener(this);
+
         createGrapg2appendData();
         createGrapg2appendDataPaporot();
     }
@@ -85,7 +98,6 @@ public class MainActivity extends AppCompatActivity {
     private void initSeekBarView() {
         seekBar = findViewById(R.id.seekBar);
         seekBar.getProgressDrawable().setColorFilter(getResources().getColor(R.color.colorAccent), PorterDuff.Mode.SRC_ATOP);
-
         seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @RequiresApi(api = Build.VERSION_CODES.N)
             @Override
@@ -95,25 +107,47 @@ public class MainActivity extends AppCompatActivity {
                 myPointArrayList.clear();
                 graph.removeAllSeries();
                 graph.removeSeries(series);
-
                 pointBx = progress;
                 createPointsForFractal();
                 createGrapg2resetData();
                 graph.addSeries(series2);
-
-                // initBL();
-                //  initView();
-                //  Toast.makeText(MainActivity.this, "" + progress, Toast.LENGTH_SHORT).show();
             }
 
             @Override
             public void onStartTrackingTouch(SeekBar seekBar) {
-
             }
 
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
+            }
+        });
 
+    }
+
+    private void initSeekBarViewPaporot() {
+        seekBarPaporot = findViewById(R.id.seekBar_paporot);
+        seekBarPaporot.getProgressDrawable().setColorFilter(getResources().getColor(R.color.colorAccent), PorterDuff.Mode.SRC_ATOP);
+        seekBarPaporot.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @RequiresApi(api = Build.VERSION_CODES.N)
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                arrayListPointsXpaporot.clear();
+                arrayListPointsYpaporot.clear();
+                myPointArrayListPaporot.clear();
+                graphPaporot.removeAllSeries();
+                graphPaporot.removeSeries(series);
+                numberOfPointsForPaporot = progress;
+                createPointsForPaporot();
+                createGrapg2resetDataPaporot();// to do here
+                graphPaporot.addSeries(series2Paporot);
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
             }
         });
 
@@ -130,32 +164,30 @@ public class MainActivity extends AppCompatActivity {
     private void sortForPaporot() {
         Comparator<MyPointPaporot> byPointxPaporot = Comparator.comparing(MyPointPaporot::getPointXcoordinatePaporot);
         Collections.sort(myPointArrayListPaporot, byPointxPaporot);
-        //  Collections.sort(arrayListPointsX);
     }
 
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     private void createGrapg2appendDataPaporot() {
-        double x = 0, y = 0;
+        double xPaporot = 0, yPaporot = 0;
         graphPaporot = (GraphView) findViewById(R.id.graph_paporot);
         sortForPaporot();
         seriesPaporot = new PointsGraphSeries<DataPoint>();
         for (int i = 0; i < arrayListPointsXpaporot.size(); i++) {
-            //  x = arrayListPointsX.get(i);      y = arrayListPointsY.get(i);
-            //  x=  myPoint.getPointXcoordinate();  y=myPoint.getPointYcoordinate();
-            x = myPointArrayListPaporot.get(i).getPointXcoordinatePaporot() - 1;
-            y = myPointArrayListPaporot.get(i).getPointYcoordinatePaporot() - 1;
-            seriesPaporot.appendData(new DataPoint(x, y), true, 999999999);
+            xPaporot = myPointArrayListPaporot.get(i).getPointXcoordinatePaporot() - 1;
+            yPaporot = myPointArrayListPaporot.get(i).getPointYcoordinatePaporot() - 1;
+            seriesPaporot.appendData(new DataPoint(xPaporot, yPaporot), true, 999999999);
         }
         graphPaporot.addSeries(seriesPaporot);
-        graphPaporot.getLegendRenderer().setWidth(40000);
+        graphPaporot.getLegendRenderer().setWidth(400);
         //
         graphPaporot.getViewport().setXAxisBoundsManual(true);
-        graphPaporot.getViewport().setMinX(0);
-        graphPaporot.getViewport().setMaxX(9999999);
+        graphPaporot.getViewport().setMaxX(3);
+        graphPaporot.getViewport().setMinX(-3);
+
         graphPaporot.getViewport().setYAxisBoundsManual(true);
-        graphPaporot.getViewport().setMinY(0);
-        graphPaporot.getViewport().setMaxY(getMaxPoints(pointAy, pointBy, pointCy));
+        graphPaporot.getViewport().setMaxY(10);
+
 
     }
 
@@ -210,6 +242,31 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    private void createGrapg2resetDataPaporot() {
+        double xPaporot = 0, yPaporot = 0;
+        sortForPaporot();
+        series2Paporot = new PointsGraphSeries<DataPoint>();
+        for (int i = 0; i < arrayListPointsXpaporot.size(); i++) {
+            xPaporot = myPointArrayListPaporot.get(i).getPointXcoordinatePaporot() - 1;
+            yPaporot = myPointArrayListPaporot.get(i).getPointYcoordinatePaporot() - 1;
+            // series2.resetData(data());
+            series2Paporot.appendData(new DataPoint(xPaporot, yPaporot), true, 999999999);
+
+        }
+        //  graph.addSeries(series2);
+        // graphPaporot.addSeries(series2Paporot);
+        graphPaporot.getLegendRenderer().setWidth(40000);
+        //
+        graphPaporot.getViewport().setXAxisBoundsManual(true);
+        graphPaporot.getViewport().setMaxX(3);
+        graphPaporot.getViewport().setMinX(-3);
+
+        graphPaporot.getViewport().setYAxisBoundsManual(true);
+        graphPaporot.getViewport().setMaxY(10);
+
+    }
+
     private int getMaxPoints(int pointA, int pointB, int pointC) {
         ArrayList<Integer> myLocalArrayList = new ArrayList<>();
         myLocalArrayList.add(pointA);
@@ -261,13 +318,12 @@ public class MainActivity extends AppCompatActivity {
         arrayListPointsX.add(pointStartX);
         arrayListPointsY.add(pointStartY);
         myPointArrayList.add(new MyPoint(0, pointStartX, pointStartY));
-        for (int i = 0; i < 20000; i++) {
+        for (int i = 0; i < 10000; i++) {
             int localRandom = getRandomNumberInRange(1, 3);
             int localResX = (arrayListPointsX.get(i) + getFinalPointX(localRandom)) / 2;
             int localResY = (arrayListPointsY.get(i) + getFinalPointY(localRandom)) / 2;
             arrayListPointsX.add(localResX);
             arrayListPointsY.add(localResY);
-
             myPointArrayList.add(new MyPoint(i + 1, localResX, localResY));
         }
     }
@@ -275,19 +331,14 @@ public class MainActivity extends AppCompatActivity {
     private void createPointsForPaporot() {
         arrayListPointsXpaporot.add(0.0);
         arrayListPointsYpaporot.add(0.0);
-        myPointArrayListPaporot.add(new MyPointPaporot(0.0, 0.0, 0.0));
-        for (int i = 0; i < 20000; i++) {
+        myPointArrayListPaporot.add(new MyPointPaporot(0.0, pointStartXpaporot, pointStartYpaporot));
+        for (int i = 0; i < numberOfPointsForPaporot; i++) {
             int localRandom = getRandomNumberInRange(1, 4);
             chooseRightFormulaForRandomPoints(localRandom);
-            //formula here
-            double localResX = (arrayListPointsXpaporot.get(i) * a) + (b * arrayListPointsYpaporot.get(i)) + e;
-            //X=ax+by+e    Y=cx+dy+f,
-            double localResY = (arrayListPointsXpaporot.get(i) * c + d * arrayListPointsYpaporot.get(i) + f);
-
-
+            double localResX = ((arrayListPointsXpaporot.get(i) * a) + (b * arrayListPointsYpaporot.get(i)) + e);
+            double localResY = ((arrayListPointsXpaporot.get(i) * c) + (d * arrayListPointsYpaporot.get(i)) + f);
             arrayListPointsXpaporot.add(localResX);
             arrayListPointsYpaporot.add(localResY);
-
             myPointArrayListPaporot.add(new MyPointPaporot(i + 1, localResX, localResY));
         }
     }
@@ -361,4 +412,23 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.btn1:
+                graph.setVisibility(View.VISIBLE);
+                graphPaporot.setVisibility(View.GONE);
+
+                seekBar.setVisibility(View.VISIBLE);
+                seekBarPaporot.setVisibility(View.GONE);
+                break;
+            case R.id.btn2:
+                graph.setVisibility(View.GONE);
+                graphPaporot.setVisibility(View.VISIBLE);
+
+                seekBar.setVisibility(View.GONE);
+                seekBarPaporot.setVisibility(View.VISIBLE);
+                break;
+        }
+    }
 }

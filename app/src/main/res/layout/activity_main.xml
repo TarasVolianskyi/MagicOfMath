@@ -7,57 +7,41 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <ScrollView
-        android:id="@+id/scrollView"
+
+    <View
         android:layout_width="match_parent"
-        android:layout_height="650dp">
+        android:layout_height="150dp" />
 
-        <LinearLayout
-            android:orientation="vertical"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
+    <com.jjoe64.graphview.GraphView
+        android:layout_width="match_parent"
+        android:layout_height="400dip"
+        android:id="@+id/graph" />
 
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="150dp" />
-
-            <com.jjoe64.graphview.GraphView
-                android:layout_width="match_parent"
-                android:layout_height="400dip"
-                android:id="@+id/graph" />
-
-            <SeekBar
-                android:id="@+id/seekBar"
-                style="@style/Widget.AppCompat.SeekBar.Discrete"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:max="12000"
-                android:padding="30dp"
-                android:progress="2000" />
+    <SeekBar
+        android:id="@+id/seekBar"
+        style="@style/Widget.AppCompat.SeekBar.Discrete"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:max="12000"
+        android:padding="30dp"
+        android:progress="2000" />
 
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="150dp" />
+    <com.jjoe64.graphview.GraphView
+        android:layout_width="match_parent"
+        android:layout_height="400dip"
+        android:id="@+id/graph_paporot"
+        android:visibility="gone" />
 
-            <com.jjoe64.graphview.GraphView
-                android:layout_width="match_parent"
-                android:layout_height="400dip"
-                android:id="@+id/graph_paporot" />
-
-            <SeekBar
-                android:id="@+id/seekBar_paporot"
-                style="@style/Widget.AppCompat.SeekBar.Discrete"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:max="12000"
-                android:padding="30dp"
-                android:progress="2000" />
-
-        </LinearLayout>
-
-    </ScrollView>
+    <SeekBar
+        android:id="@+id/seekBar_paporot"
+        style="@style/Widget.AppCompat.SeekBar.Discrete"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:max="200000"
+        android:padding="30dp"
+        android:progress="20000"
+        android:visibility="gone" />
 
 
     <LinearLayout
