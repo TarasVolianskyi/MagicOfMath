@@ -32,17 +32,38 @@ public class MainActivity extends AppCompatActivity {
     int pointStartY = 50;
     int finalPointX;
     int finalPointY;
+
+    double a = 0.0;
+    double b = 0.0;
+    double c = 0.0;
+    double d = 0.0;
+    double e = 0.0;
+    double f = 0.0;
+    double p = 0.0;
+
+
     // int mainSize = 200;
     private SeekBar seekBar;
+    private SeekBar seekBarPaporot;
 
-    ArrayList<Integer> arrayListPointsX = new ArrayList<>();
-    ArrayList<Integer> arrayListPointsY = new ArrayList<>();
-    ArrayList<Integer> arrayListPointsXsorted = new ArrayList<>();
-    MyPoint myPoint = new MyPoint();
-    ArrayList<MyPoint> myPointArrayList = new ArrayList<>();
-private     GraphView graph;
-    private  PointsGraphSeries<DataPoint> series;
-    private  PointsGraphSeries<DataPoint> series2;
+
+    private ArrayList<Integer> arrayListPointsX = new ArrayList<>();
+    private ArrayList<Integer> arrayListPointsY = new ArrayList<>();
+    private ArrayList<Integer> arrayListPointsXsorted = new ArrayList<>();
+    private MyPoint myPoint = new MyPoint();
+    private MyPointPaporot myPointPaporot = new MyPointPaporot();
+    private ArrayList<MyPoint> myPointArrayList = new ArrayList<>();
+    private ArrayList<MyPointPaporot> myPointArrayListPaporot = new ArrayList<>();
+    private GraphView graph;
+    private GraphView graphPaporot;
+    private PointsGraphSeries<DataPoint> series;
+    private PointsGraphSeries<DataPoint> series2;
+    private PointsGraphSeries<DataPoint> seriesPaporot;
+    private PointsGraphSeries<DataPoint> series2Paporot;
+    private Constants myConstants = new Constants();
+
+    private ArrayList<Double> arrayListPointsXpaporot = new ArrayList<>();
+    private ArrayList<Double> arrayListPointsYpaporot = new ArrayList<>();
 
 
     @RequiresApi(api = Build.VERSION_CODES.N)
@@ -58,7 +79,7 @@ private     GraphView graph;
     @RequiresApi(api = Build.VERSION_CODES.N)
     private void initView() {
         createGrapg2appendData();
-
+        createGrapg2appendDataPaporot();
     }
 
     private void initSeekBarView() {
@@ -72,14 +93,17 @@ private     GraphView graph;
                 arrayListPointsX.clear();
                 arrayListPointsY.clear();
                 myPointArrayList.clear();
-                pointBx= progress;
+                graph.removeAllSeries();
+                graph.removeSeries(series);
+
+                pointBx = progress;
                 createPointsForFractal();
                 createGrapg2resetData();
-                graph.getSecondScale().addSeries(series2);
+                graph.addSeries(series2);
 
-               // initBL();
-              //  initView();
-              //  Toast.makeText(MainActivity.this, "" + progress, Toast.LENGTH_SHORT).show();
+                // initBL();
+                //  initView();
+                //  Toast.makeText(MainActivity.this, "" + progress, Toast.LENGTH_SHORT).show();
             }
 
             @Override
@@ -102,6 +126,38 @@ private     GraphView graph;
         //  Collections.sort(arrayListPointsX);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    private void sortForPaporot() {
+        Comparator<MyPointPaporot> byPointxPaporot = Comparator.comparing(MyPointPaporot::getPointXcoordinatePaporot);
+        Collections.sort(myPointArrayListPaporot, byPointxPaporot);
+        //  Collections.sort(arrayListPointsX);
+    }
+
+
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    private void createGrapg2appendDataPaporot() {
+        double x = 0, y = 0;
+        graphPaporot = (GraphView) findViewById(R.id.graph_paporot);
+        sortForPaporot();
+        seriesPaporot = new PointsGraphSeries<DataPoint>();
+        for (int i = 0; i < arrayListPointsXpaporot.size(); i++) {
+            //  x = arrayListPointsX.get(i);      y = arrayListPointsY.get(i);
+            //  x=  myPoint.getPointXcoordinate();  y=myPoint.getPointYcoordinate();
+            x = myPointArrayListPaporot.get(i).getPointXcoordinatePaporot() - 1;
+            y = myPointArrayListPaporot.get(i).getPointYcoordinatePaporot() - 1;
+            seriesPaporot.appendData(new DataPoint(x, y), true, 999999999);
+        }
+        graphPaporot.addSeries(seriesPaporot);
+        graphPaporot.getLegendRenderer().setWidth(40000);
+        //
+        graphPaporot.getViewport().setXAxisBoundsManual(true);
+        graphPaporot.getViewport().setMinX(0);
+        graphPaporot.getViewport().setMaxX(9999999);
+        graphPaporot.getViewport().setYAxisBoundsManual(true);
+        graphPaporot.getViewport().setMinY(0);
+        graphPaporot.getViewport().setMaxY(getMaxPoints(pointAy, pointBy, pointCy));
+
+    }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     private void createGrapg2appendData() {
@@ -138,11 +194,11 @@ private     GraphView graph;
             //  x=  myPoint.getPointXcoordinate();  y=myPoint.getPointYcoordinate();
             x = myPointArrayList.get(i).getPointXcoordinate() - 1;
             y = myPointArrayList.get(i).getPointYcoordinate() - 1;
-           // series2.resetData(data());
+            // series2.resetData(data());
             series2.appendData(new DataPoint(x, y), true, 999999999);
 
         }
-      //  graph.addSeries(series2);
+        //  graph.addSeries(series2);
         graph.getLegendRenderer().setWidth(40000);
         //
         graph.getViewport().setXAxisBoundsManual(true);
@@ -165,7 +221,7 @@ private     GraphView graph;
 
     private void initBL() {
         createPointsForFractal();
-
+        createPointsForPaporot();
     }
 
 
@@ -190,24 +246,22 @@ private     GraphView graph;
 
         DataPoint[] values = new DataPoint[arrayListPointsX.size()];
 
-            for (int i = 0; i < arrayListPointsX.size(); i++) {
-                //  x = arrayListPointsX.get(i);      y = arrayListPointsY.get(i);
-                //  x=  myPoint.getPointXcoordinate();  y=myPoint.getPointYcoordinate();
-                x = myPointArrayList.get(i).getPointXcoordinate() - 1;
-                y = myPointArrayList.get(i).getPointYcoordinate() - 1;
-                DataPoint v = new DataPoint(x, y);
-                values[i] = v;
+        for (int i = 0; i < arrayListPointsX.size(); i++) {
+            //  x = arrayListPointsX.get(i);      y = arrayListPointsY.get(i);
+            //  x=  myPoint.getPointXcoordinate();  y=myPoint.getPointYcoordinate();
+            x = myPointArrayList.get(i).getPointXcoordinate() - 1;
+            y = myPointArrayList.get(i).getPointYcoordinate() - 1;
+            DataPoint v = new DataPoint(x, y);
+            values[i] = v;
         }
         return values;
     }
 
     private void createPointsForFractal() {
-
-
         arrayListPointsX.add(pointStartX);
         arrayListPointsY.add(pointStartY);
         myPointArrayList.add(new MyPoint(0, pointStartX, pointStartY));
-        for (int i = 0; i < 5000; i++) {
+        for (int i = 0; i < 20000; i++) {
             int localRandom = getRandomNumberInRange(1, 3);
             int localResX = (arrayListPointsX.get(i) + getFinalPointX(localRandom)) / 2;
             int localResY = (arrayListPointsY.get(i) + getFinalPointY(localRandom)) / 2;
@@ -216,15 +270,65 @@ private     GraphView graph;
 
             myPointArrayList.add(new MyPoint(i + 1, localResX, localResY));
         }
-     /*   arrayListPointsX.add(pointAx);
-        arrayListPointsX.add(pointBx);
-        arrayListPointsX.add(pointCx);
-        arrayListPointsY.add(pointAy);
-        arrayListPointsY.add(pointBy);
-        arrayListPointsY.add(pointCy);
-
-      */
     }
+
+    private void createPointsForPaporot() {
+        arrayListPointsXpaporot.add(0.0);
+        arrayListPointsYpaporot.add(0.0);
+        myPointArrayListPaporot.add(new MyPointPaporot(0.0, 0.0, 0.0));
+        for (int i = 0; i < 20000; i++) {
+            int localRandom = getRandomNumberInRange(1, 4);
+            chooseRightFormulaForRandomPoints(localRandom);
+            //formula here
+            double localResX = (arrayListPointsXpaporot.get(i) * a) + (b * arrayListPointsYpaporot.get(i)) + e;
+            //X=ax+by+e    Y=cx+dy+f,
+            double localResY = (arrayListPointsXpaporot.get(i) * c + d * arrayListPointsYpaporot.get(i) + f);
+
+
+            arrayListPointsXpaporot.add(localResX);
+            arrayListPointsYpaporot.add(localResY);
+
+            myPointArrayListPaporot.add(new MyPointPaporot(i + 1, localResX, localResY));
+        }
+    }
+
+    private void chooseRightFormulaForRandomPoints(int intRandom) {
+        if (intRandom == 1) {
+            a = Constants.A_1_PAPOROT;
+            b = Constants.B_1_PAPOROT;
+            c = Constants.C_1_PAPOROT;
+            d = Constants.D_1_PAPOROT;
+            e = Constants.E_1_PAPOROT;
+            f = Constants.F_1_PAPOROT;
+            p = Constants.P_1_PAPOROT;
+        } else if (intRandom == 2) {
+            a = Constants.A_2_PAPOROT;
+            b = Constants.B_2_PAPOROT;
+            c = Constants.C_2_PAPOROT;
+            d = Constants.D_2_PAPOROT;
+            e = Constants.E_2_PAPOROT;
+            f = Constants.F_2_PAPOROT;
+            p = Constants.P_2_PAPOROT;
+        } else if (intRandom == 3) {
+            a = Constants.A_3_PAPOROT;
+            b = Constants.B_3_PAPOROT;
+            c = Constants.C_3_PAPOROT;
+            d = Constants.D_3_PAPOROT;
+            e = Constants.E_3_PAPOROT;
+            f = Constants.F_3_PAPOROT;
+            p = Constants.P_3_PAPOROT;
+        } else if (intRandom == 4) {
+            a = Constants.A_4_PAPOROT;
+            b = Constants.B_4_PAPOROT;
+            c = Constants.C_4_PAPOROT;
+            d = Constants.D_4_PAPOROT;
+            e = Constants.E_4_PAPOROT;
+            f = Constants.F_4_PAPOROT;
+            p = Constants.P_4_PAPOROT;
+        }
+
+    }
+
 
     private static int getRandomNumberInRange(int min, int max) {
         if (min >= max) {

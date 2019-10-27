@@ -7,22 +7,77 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <View
+    <ScrollView
+        android:id="@+id/scrollView"
         android:layout_width="match_parent"
-        android:layout_height="150dp" />
+        android:layout_height="650dp">
 
-    <com.jjoe64.graphview.GraphView
-        android:layout_width="match_parent"
-        android:layout_height="400dip"
-        android:id="@+id/graph" />
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
-    <SeekBar
-        android:id="@+id/seekBar"
-        style="@style/Widget.AppCompat.SeekBar.Discrete"
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="150dp" />
+
+            <com.jjoe64.graphview.GraphView
+                android:layout_width="match_parent"
+                android:layout_height="400dip"
+                android:id="@+id/graph" />
+
+            <SeekBar
+                android:id="@+id/seekBar"
+                style="@style/Widget.AppCompat.SeekBar.Discrete"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:max="12000"
+                android:padding="30dp"
+                android:progress="2000" />
+
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="150dp" />
+
+            <com.jjoe64.graphview.GraphView
+                android:layout_width="match_parent"
+                android:layout_height="400dip"
+                android:id="@+id/graph_paporot" />
+
+            <SeekBar
+                android:id="@+id/seekBar_paporot"
+                style="@style/Widget.AppCompat.SeekBar.Discrete"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:max="12000"
+                android:padding="30dp"
+                android:progress="2000" />
+
+        </LinearLayout>
+
+    </ScrollView>
+
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:max="50000"
-        android:padding="30dp"
-        android:progress="3000" />
+        android:orientation="horizontal">
 
+        <Button
+            android:layout_width="0dp"
+            android:text="Теорія хаосу"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:id="@+id/btn1" />
+
+        <Button
+            android:layout_width="0dp"
+            android:text="Папоротник Барнсли"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:id="@+id/btn2" />
+
+    </LinearLayout>
 </LinearLayout>
